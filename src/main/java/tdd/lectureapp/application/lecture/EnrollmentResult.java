@@ -12,7 +12,7 @@ public record EnrollmentResult(
     Long lectureId,
     String lectureTitle,
     String lectureDescription,
-    LocalDateTime lectureTime
+    String lecturer
 ) {
     public EnrollmentDto.Response toDto(){
         return Response.builder()
@@ -20,6 +20,7 @@ public record EnrollmentResult(
             .lectureId(lectureId)
             .lectureTitle(lectureTitle)
             .lectureDescription(lectureDescription)
+            .lecturer(lecturer)
             .build();
     }
 

@@ -40,11 +40,5 @@ public class LectureDetail extends BaseTimeEntity {
     }
 
     // 남은 인원을 차감하는 메서드. SRP
-    public void decreaseRemainingSeats() {
-        if (capacity > 0) {
-            capacity--;
-        } else {
-            throw new CustomGlobalException(ErrorCode.LECTURE_NOT_ENOUGH);
-        }
-    }
+
 }

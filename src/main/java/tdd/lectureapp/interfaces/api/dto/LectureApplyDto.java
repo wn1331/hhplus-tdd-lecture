@@ -1,9 +1,9 @@
 package tdd.lectureapp.interfaces.api.dto;
 
-import java.util.List;
 import tdd.lectureapp.application.lecture.LectureCriteria;
+import tdd.lectureapp.domain.enrollment.EnrollmentInfo;
 
-public record LectureDto() {
+public record LectureApplyDto() {
 
     public record Request(Long lectureId, Long lectureDetailId){
 
@@ -12,7 +12,7 @@ public record LectureDto() {
         }
     }
 
-    public record Response(Long lectureDetailId){
+    public record Response(EnrollmentInfo enrollmentInfo){
 
     }
 

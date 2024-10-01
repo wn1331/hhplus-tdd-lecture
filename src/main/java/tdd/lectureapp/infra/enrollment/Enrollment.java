@@ -31,6 +31,8 @@ public class Enrollment extends BaseTimeEntity {
     @JoinColumn(name = "lecture_id", nullable = false)
     private Lecture lecture;
 
+
+
     @Builder
     public Enrollment(Long userId, Lecture lecture) {
         this.userId = userId;
@@ -40,9 +42,10 @@ public class Enrollment extends BaseTimeEntity {
     public EnrollmentInfo toInfo() {
         return EnrollmentInfo.builder()
             .userId(userId)
-            .lectureId(id)
+            .lectureId(lecture.getId())
             .lectureTitle(lecture.getTitle())
             .lectureDescription(lecture.getDescription())
+            .lecturer(lecture.getLecturer())
             .build();
     }
 }

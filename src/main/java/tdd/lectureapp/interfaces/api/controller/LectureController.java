@@ -1,6 +1,5 @@
 package tdd.lectureapp.interfaces.api.controller;
 
-import static java.util.Collections.emptyList;
 import static org.springframework.http.ResponseEntity.ok;
 
 import java.util.List;
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tdd.lectureapp.application.lecture.EnrollmentResult;
+import tdd.lectureapp.application.lecture.LectureDetailResult;
 import tdd.lectureapp.application.lecture.LectureFacade;
+import tdd.lectureapp.interfaces.api.dto.AvailableLectureDto;
 import tdd.lectureapp.interfaces.api.dto.EnrollmentDto;
-import tdd.lectureapp.interfaces.api.dto.LectureDto;
+import tdd.lectureapp.interfaces.api.dto.LectureApplyDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,9 +27,9 @@ public class LectureController {
 
     // 특강 신청 API
     @PostMapping("/apply/{userId}")// 특강 신청 API
-    public ResponseEntity<LectureDto.Response> apply(
+    public ResponseEntity<LectureApplyDto.Response> apply(
         @PathVariable(name = "userId") Long userId,
-        @RequestBody LectureDto.Request request
+        @RequestBody LectureApplyDto.Request request
     ) {
         return ok(lectureFacade.apply(userId, request.toCriteria()).toDto());
     }
@@ -36,8 +37,8 @@ public class LectureController {
 
     // 특강 선택 API(강의/날짜별 확인)
     @GetMapping// 특강 여부 조회 API
-    public ResponseEntity<List<LectureDto.Response>> check() {
-        return ok(emptyList());
+    public ResponseEntity<List<AvailableLectureDto.Response>> availableList() {
+        return ok(lectureFacade.getAvailableLectures().stream().map(LectureDetailResult::toDto).toList());
     }
 
     // 특강 신청 완료 목록 조회 API

@@ -1,5 +1,6 @@
 package tdd.lectureapp.infra.lecture;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,12 @@ public class LectureDetailRepositoryImpl implements LectureDetailRepository {
 
 
     @Override
-    public Optional<LectureDetail> findById(Long id) {
-        return repository.findById(id);
+    public Optional<LectureDetail> findByIdAndLectureId(Long id, Long lectureId) {
+        return repository.findByIdAndLectureId(id,lectureId);
+    }
+
+    @Override
+    public List<LectureDetail> findByCapacityGreaterThanEqual() {
+        return repository.findByCapacityGreaterThanEqual(1L);
     }
 }

@@ -15,13 +15,13 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
 
     @Transactional
-    public Enrollment apply(Long userId, Lecture lecture){
+    public EnrollmentInfo apply(Long userId, Lecture lecture){
         Enrollment enrollment = enrollmentRepository.save(Enrollment.builder()
             .userId(userId)
             .lecture(lecture)
             .build()
         );
-        return enrollment;
+        return enrollment.toInfo();
     }
 
     @Transactional(readOnly = true)

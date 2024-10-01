@@ -10,6 +10,7 @@ import tdd.lectureapp.domain.enrollment.EnrollmentRepository;
 public class EnrollmentRepositoryImpl implements EnrollmentRepository {
     private final EnrollmentJpaRepository repository;
 
+
     @Override
     public Enrollment save(Enrollment enrollment) {
         return repository.save(enrollment);

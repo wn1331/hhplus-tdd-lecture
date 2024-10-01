@@ -8,11 +8,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.lectureapp.domain.enrollment.EnrollmentInfo;
 import tdd.lectureapp.domain.enrollment.EnrollmentService;
+import tdd.lectureapp.domain.lecture.LectureDetailInfo;
 import tdd.lectureapp.domain.lecture.LectureDetailService;
 import tdd.lectureapp.domain.lecture.LectureService;
+import tdd.lectureapp.infra.enrollment.Enrollment;
 import tdd.lectureapp.infra.lecture.Lecture;
-import tdd.lectureapp.interfaces.api.dto.LectureDto.Request;
-import tdd.lectureapp.interfaces.api.dto.LectureDto.Response;
+
 
 @Component
 @RequiredArgsConstructor
@@ -22,17 +23,28 @@ public class LectureFacade {
     private final LectureDetailService lectureDetailService;
     private final EnrollmentService enrollmentService;
 
-    //
+
     @Transactional
     public LectureResult apply(Long userId, LectureCriteria criteria){
         // 강의가 있는지 확인
         Lecture lecture = lectureService.findLecture(criteria.toCommand());
-        // 강의를 이미 신청했는지 확인 [STEP4]
 
-        // 강의세부에서 1 차감
-        lectureDetailService.decreaseCapacity(criteria.toCommand());
+        // 유저가 해당 특강을 이미 신청했는지 확인 [STEP4]
 
-        return enrollmentService.apply(userId,lecture.getId(),criteria.toCommand());
+        // 강의세부에서 1 차감 [STEP3] - 선착순 30명 이후의 신청자의 경우 실패하도록 개선
+
+        // 등록테이블에 save
+        EnrollmentInfo enrollmentInfo = enrollmentService.apply(userId, lecture);
+        return new LectureResult(enrollmentInfo);
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<LectureDetailResult> getAvailableLectures(){
+
+        return lectureDetailService.getAvailableLectureDetails().stream().map(
+            LectureDetailInfo::toResult).toList();
+
 
     }
 

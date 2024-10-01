@@ -1,5 +1,6 @@
 package tdd.lectureapp.domain.lecture;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,17 @@ public class LectureDetailService {
     private final LectureDetailRepository lectureDetailRepository;
 
 
-    @Transactional
-    public void decreaseCapacity(LectureCommand command) {
-        //        // 수강가능인원에서 1개 제거(JPA 변경감지)
-        LectureDetail lectureDetail = lectureDetailRepository.findById(command.lectureDetailId())
-            .orElseThrow(() -> new CustomGlobalException(
-                ErrorCode.LECTURE_NOT_EXIST));
-        lectureDetail.decreaseRemainingSeats();
+    @Transactional(readOnly = true)
+    public List<LectureDetailInfo> getAvailableLectureDetails(){
+        return lectureDetailRepository.findByCapacityGreaterThanEqual().stream().map(it->
+            LectureDetailInfo.builder()
+                .id(it.getId())
+                .lectureId(it.getLecture().getId())
+                .lecturer(it.getLecture().getLecturer())
+                .lectureDate(it.getLectureDate())
+                .capacity(it.getCapacity()).build()
+        ).toList();
     }
+
 
 }
