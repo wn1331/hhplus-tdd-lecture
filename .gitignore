@@ -4,7 +4,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/**/aws.xml
-
+.idea
 # Generated files
 .idea/**/contentModel.xml
 .idea/**/dataSources/
