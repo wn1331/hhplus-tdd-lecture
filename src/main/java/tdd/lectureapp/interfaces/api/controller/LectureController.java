@@ -2,6 +2,7 @@ package tdd.lectureapp.interfaces.api.controller;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class LectureController {
     @PostMapping("/apply/{userId}")// 특강 신청 API
     public ResponseEntity<LectureApplyDto.Response> apply(
         @PathVariable(name = "userId") Long userId,
-        @RequestBody LectureApplyDto.Request request
+        @RequestBody @Valid LectureApplyDto.Request request
     ) {
         return ok(lectureFacade.apply(userId, request.toCriteria()).toDto());
     }
