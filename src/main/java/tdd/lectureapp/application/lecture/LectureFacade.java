@@ -3,7 +3,6 @@ package tdd.lectureapp.application.lecture;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.lectureapp.domain.enrollment.EnrollmentInfo;
@@ -11,7 +10,6 @@ import tdd.lectureapp.domain.enrollment.EnrollmentService;
 import tdd.lectureapp.domain.lecture.LectureDetailInfo;
 import tdd.lectureapp.domain.lecture.LectureDetailService;
 import tdd.lectureapp.domain.lecture.LectureService;
-import tdd.lectureapp.infra.enrollment.Enrollment;
 import tdd.lectureapp.infra.lecture.Lecture;
 
 
@@ -45,7 +43,6 @@ public class LectureFacade {
 
         return lectureDetailService.getAvailableLectureDetails().stream().map(
             LectureDetailInfo::toResult).toList();
-
 
     }
 

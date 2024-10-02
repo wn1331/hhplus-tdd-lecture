@@ -22,3 +22,8 @@
 ```
 위와 같이, 테이블 레벨에서 uniqueConstraints 속성을 사용하여 유일성 제약을 설정하였습니다.(STEP4에 추가)
 
+<h2>번외 - 클린 아키텍처</h2>
+1. 하나의 DTO클래스에서 req/res inner 클래스로 구현(멘토링 반영)
+2. 퍼사드 패턴 사용
+3. JPA를 도메인 객체로 사용하는 방법 적용(멘토링 반영)<br>
+requestDto(interfaces) -> criteria(application) -> command(domain) -> parameter(infra) -> entity(infra) -> info(domain) ->result(application) -> responseDto(interfaces)

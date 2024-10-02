@@ -39,7 +39,8 @@ public class LectureController {
     // 특강 선택 API(강의/날짜별 확인)
     @GetMapping// 특강 여부 조회 API
     public ResponseEntity<List<AvailableLectureDto.Response>> availableList() {
-        return ok(lectureFacade.getAvailableLectures().stream().map(LectureDetailResult::toDto).toList());
+
+        return ok(LectureDetailResult.groupByLecturer(lectureFacade.getAvailableLectures()));
     }
 
     // 특강 신청 완료 목록 조회 API
