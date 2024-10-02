@@ -28,12 +28,15 @@ class LectureFacadeIntegrationTest {
     @Autowired
     private LectureFacade facade;
 
+    private final Long USER_ID_1=99L;
+    private final Long USER_ID_2=98L;
+
     @Test
     @Order(1)
     @DisplayName("[실패] 동시성 - 40명이 동시에 특강 신청 시 30명만 성공, 10명은 Exception 발생")
     void apply_lecture_concurrency_fail_test() throws ExecutionException, InterruptedException {
 
-        LectureCriteria lectureCriteria = new LectureCriteria(1L, 1L);
+        LectureCriteria lectureCriteria = new LectureCriteria(2L, 4L);
 
         List<CompletableFuture<Boolean>> tasks = new ArrayList<>();
         List<Long> exceptionCount = new ArrayList<>();  // 실패한 사용자 ID 저장 리스트
@@ -77,8 +80,7 @@ class LectureFacadeIntegrationTest {
     @DisplayName("[실패] 동시성 - 동일한 유저 정보로 같은 특강을 5번 신청")
     void apply_lecture_sameLecture_concurrency_failure_test() throws ExecutionException, InterruptedException {
 
-        LectureCriteria lectureCriteria = new LectureCriteria(1L, 1L);
-        long userId = 1L;  // 동일한 유저 ID
+        LectureCriteria lectureCriteria = new LectureCriteria(2L, 5L);
 
         List<CompletableFuture<Boolean>> tasks = new ArrayList<>();
         List<Long> exceptionCount = new ArrayList<>();  // 실패한 신청 저장 리스트
@@ -86,10 +88,10 @@ class LectureFacadeIntegrationTest {
         // 동일한 유저가 5번 신청
         for (int i = 0; i < 5; i++) {
             tasks.add(CompletableFuture.supplyAsync(() -> {
-                LectureResult result = facade.apply(userId, lectureCriteria);
+                LectureResult result = facade.apply(USER_ID_1, lectureCriteria);
                 return result != null;
             }).exceptionally(ex -> {  // 예외 발생 시 실패 처리
-                exceptionCount.add(userId);
+                exceptionCount.add(USER_ID_1);
                 return false;  // 예외 발생 시 실패 처리
             }));
         }
@@ -116,19 +118,18 @@ class LectureFacadeIntegrationTest {
     }
 
     @Test
-    @Order(3)
+    @Order(1)
     @DisplayName("[실패] 동시성x - 동일한 유저가 같은 특강을 5번 신청 시 첫 번째는 성공, 나머지는 실패")
     void apply_lecture_sameLecture_failure_test() {
         LectureCriteria lectureCriteria = new LectureCriteria(1L, 1L);
-        long userId = 1L;  // 동일한 유저 ID
 
         // 첫 번째 신청은 성공해야 함
-        LectureResult result = facade.apply(userId, lectureCriteria);
+        LectureResult result = facade.apply(USER_ID_2, lectureCriteria);
         assertThat(result).isNotNull();
 
         // 두 번째부터는 모두 예외가 발생해야 함
         for (int i = 0; i < 4; i++) {
-            assertThatThrownBy(() -> facade.apply(userId, lectureCriteria))
+            assertThatThrownBy(() -> facade.apply(USER_ID_2, lectureCriteria))
                 .isInstanceOf(CustomGlobalException.class)
                 .hasMessageContaining(ErrorCode.LECTURE_ALREADY_APPLIED.getMessage());
         }
