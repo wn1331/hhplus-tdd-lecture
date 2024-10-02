@@ -1,5 +1,6 @@
 package tdd.lectureapp.domain.lecture;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class LectureDetailService {
 
     @Transactional(readOnly = true)
     public List<LectureDetailInfo> getAvailableLectureDetails(){
-        return lectureDetailRepository.findByCapacityGreaterThanEqual().stream().map(it->
+        return lectureDetailRepository.findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual().stream().map(it->
             LectureDetailInfo.builder()
                 .id(it.getId())
                 .lectureId(it.getLecture().getId())

@@ -33,7 +33,7 @@ class LectureFacadeIntegrationTest {
 
     @Test
     @Order(1)
-    @DisplayName("[실패] 동시성 - 40명이 동시에 특강 신청 시 30명만 성공, 10명은 Exception 발생")
+    @DisplayName("[실패] 동시 - 40명이 동시에 특강 신청 시 30명만 성공, 10명은 Exception 발생")
     void apply_lecture_concurrency_fail_test() throws ExecutionException, InterruptedException {
 
         LectureCriteria lectureCriteria = new LectureCriteria(2L, 4L);
@@ -77,7 +77,7 @@ class LectureFacadeIntegrationTest {
 
     @Test
     @Order(2)
-    @DisplayName("[실패] 동시성 - 동일한 유저 정보로 같은 특강을 5번 신청")
+    @DisplayName("[실패] 동시 - 동일한 유저 정보로 같은 특강을 5번 신청")
     void apply_lecture_sameLecture_concurrency_failure_test() throws ExecutionException, InterruptedException {
 
         LectureCriteria lectureCriteria = new LectureCriteria(2L, 5L);

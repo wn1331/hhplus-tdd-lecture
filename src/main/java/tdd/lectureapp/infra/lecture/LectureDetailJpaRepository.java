@@ -1,6 +1,7 @@
 package tdd.lectureapp.infra.lecture;
 
 import jakarta.persistence.LockModeType;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,5 @@ public interface LectureDetailJpaRepository extends JpaRepository<LectureDetail,
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<LectureDetail> findByIdAndLectureId(Long id, Long lectureId);
 
-    List<LectureDetail> findByCapacityGreaterThanEqual(Long capacity);
+    List<LectureDetail> findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual(Long capacity, LocalDate date);
 }
