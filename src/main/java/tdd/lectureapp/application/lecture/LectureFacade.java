@@ -3,7 +3,6 @@ package tdd.lectureapp.application.lecture;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.lectureapp.domain.enrollment.EnrollmentInfo;
@@ -11,7 +10,6 @@ import tdd.lectureapp.domain.enrollment.EnrollmentService;
 import tdd.lectureapp.domain.lecture.LectureDetailInfo;
 import tdd.lectureapp.domain.lecture.LectureDetailService;
 import tdd.lectureapp.domain.lecture.LectureService;
-import tdd.lectureapp.infra.enrollment.Enrollment;
 import tdd.lectureapp.infra.lecture.Lecture;
 
 
@@ -32,6 +30,7 @@ public class LectureFacade {
         // 유저가 해당 특강을 이미 신청했는지 확인 [STEP4]
 
         // 강의세부에서 1 차감 [STEP3] - 선착순 30명 이후의 신청자의 경우 실패하도록 개선
+        lectureDetailService.decreaseCapacity(criteria.toCommand());
 
         // 등록테이블에 save
         EnrollmentInfo enrollmentInfo = enrollmentService.apply(userId, lecture);
@@ -44,7 +43,6 @@ public class LectureFacade {
 
         return lectureDetailService.getAvailableLectureDetails().stream().map(
             LectureDetailInfo::toResult).toList();
-
 
     }
 

@@ -1,19 +1,26 @@
 package tdd.lectureapp.interfaces.api.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 import lombok.Builder;
 
 public record AvailableLectureDto() {
 
     @Builder
     public record Response(
-        Long id,
-        Long lectureId,
-        String lecturer,
-        LocalDate lectureDate,
-        Long capacity
+        String lecturer,  // 강사 이름
+        List<LecturerLectureDto> lectureDetails
 
     ){
+        @Builder
+        public record LecturerLectureDto(
+            Long id,
+            Long lectureId,
+            LocalDate lectureDate,
+            Long capacity
+        ){
+
+        }
 
     }
 
