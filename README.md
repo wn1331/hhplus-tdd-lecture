@@ -20,5 +20,5 @@
 @Table(name = "ENROLLMENT",
     uniqueConstraints = {@UniqueConstraint(columnNames = {"userId", "lecture_id"})})
 ```
-위와 같이, 테이블 레벨에서 uniqueConstraints 속성을 사용하여 유일성 제약을 설정하였습니다.
+위와 같이, 테이블 레벨에서 uniqueConstraints 속성을 사용하여 유일성 제약을 설정하였습니다.(STEP4에 추가)
 
