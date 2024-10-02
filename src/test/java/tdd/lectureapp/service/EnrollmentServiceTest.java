@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -18,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import tdd.lectureapp.domain.enrollment.EnrollmentInfo;
 import tdd.lectureapp.domain.enrollment.EnrollmentRepository;
 import tdd.lectureapp.domain.enrollment.EnrollmentService;
+import tdd.lectureapp.global.CustomGlobalException;
+import tdd.lectureapp.global.ErrorCode;
 import tdd.lectureapp.infra.enrollment.Enrollment;
 import tdd.lectureapp.infra.lecture.Lecture;
 
@@ -116,5 +119,27 @@ class EnrollmentServiceTest {
         assertThat(result).isEmpty();  // 신청 내역이 없는 경우 빈 리스트여야 함
 
         verify(enrollmentRepository).findAllByUserId(USER_ID);
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("[실패] 이미 신청된 강의에 대해 예외 발생")
+    void apply_existEnrollment_exception() {
+        // given
+        Long lectureId = 101L;
+        Lecture lecture = mock(Lecture.class);
+
+        // Lecture 객체의 getId()가 올바른 값을 반환하도록 설정
+        when(lecture.getId()).thenReturn(lectureId);
+
+        when(enrollmentRepository.findByUserIdAndLectureId(USER_ID, lectureId))
+            .thenReturn(Optional.of(mock(Enrollment.class)));  // 이미 신청한 강의가 있는 경우
+
+        // when, then
+        assertThatThrownBy(() -> enrollmentService.apply(USER_ID, lecture))
+            .isInstanceOf(CustomGlobalException.class)
+            .hasMessageContaining(ErrorCode.LECTURE_ALREADY_APPLIED.getMessage());
+
+        verify(enrollmentRepository).findByUserIdAndLectureId(USER_ID, lectureId);
     }
 }

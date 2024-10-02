@@ -27,7 +27,6 @@ public class LectureFacade {
         // 강의가 있는지 확인
         Lecture lecture = lectureService.findLecture(criteria.toCommand());
 
-        // 유저가 해당 특강을 이미 신청했는지 확인 [STEP4]
 
         // 강의세부에서 1 차감 [STEP3] - 선착순 30명 이후의 신청자의 경우 실패하도록 개선
         lectureDetailService.decreaseCapacity(criteria.toCommand());
