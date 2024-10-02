@@ -38,7 +38,7 @@ public record LectureDetailResult(
         return groupedByLecturer.entrySet().stream()
             .map(entry -> AvailableLectureDto.Response.builder()
                 .lecturer(entry.getKey())
-                .lecturerDetails(entry.getValue().stream()
+                .lectureDetails(entry.getValue().stream()
                     .map(LectureDetailResult::toLecturerLectureDto)
                     .toList())
                 .build())

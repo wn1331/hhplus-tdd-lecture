@@ -1,10 +1,11 @@
-package tdd.lectureapp;
+package tdd.lectureapp.controller;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,21 +97,23 @@ class LectureControllerTest {
     }
 
     @Test
-    @DisplayName("[성공] 특강 선택 API - 성공")
+    @DisplayName("[성공] 가능한 특강 조회(특강 선택) API - 성공")
     void availableList_success() throws Exception {
-        // given
-        List<LectureDetailResult> lectureDetailResults = List.of(mock(LectureDetailResult.class),
-            mock(LectureDetailResult.class));
+        // Given
+        List<LectureDetailResult> lectureDetails = List.of(
+            new LectureDetailResult(1L, 101L, "A코치님", LocalDate.of(2024, 10, 1), 30L),
+            new LectureDetailResult(2L, 102L, "B코치님", LocalDate.of(2024, 10, 2), 25L)
+        );
 
-        when(lectureFacade.getAvailableLectures()).thenReturn(lectureDetailResults);
+        when(lectureFacade.getAvailableLectures()).thenReturn(lectureDetails);
 
-        // when, then
+        // When & Then
         mockMvc.perform(get("/lecture"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$.length()").value(2))
-            .andDo(print());
-
-        verify(lectureFacade).getAvailableLectures();
+            .andExpect(jsonPath("$.length()").value(2))  // 결과의 길이 확인
+            .andExpect(jsonPath("$[0].lecturer").value("A코치님"))  // 첫 번째 강사 이름 확인
+            .andExpect(jsonPath("$[0].lectureDetails[0].id").value(1L))  // 첫 번째 특강 ID 확인
+            .andExpect(jsonPath("$[1].lecturer").value("B코치님"))  // 두 번째 강사 이름 확인
+            .andExpect(jsonPath("$[1].lectureDetails[0].lectureId").value(102L));  // 두 번째 특강의 lectureId 확인
     }
 }

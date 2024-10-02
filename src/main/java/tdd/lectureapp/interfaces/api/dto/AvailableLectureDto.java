@@ -9,7 +9,7 @@ public record AvailableLectureDto() {
     @Builder
     public record Response(
         String lecturer,  // 강사 이름
-        List<LecturerLectureDto> lecturerDetails
+        List<LecturerLectureDto> lectureDetails
 
     ){
         @Builder
