@@ -43,13 +43,4 @@ public class Enrollment extends BaseTimeEntity {
         this.lecture = lecture;
     }
 
-    public EnrollmentInfo toInfo() {
-        return EnrollmentInfo.builder()
-            .userId(userId)
-            .lectureId(lecture.getId())
-            .lectureTitle(lecture.getTitle())
-            .lectureDescription(lecture.getDescription())
-            .lecturer(lecture.getLecturer())
-            .build();
-    }
 }
