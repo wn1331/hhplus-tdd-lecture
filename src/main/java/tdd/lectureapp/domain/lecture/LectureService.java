@@ -15,16 +15,12 @@ public class LectureService {
     private final LectureRepository lectureRepository;
 
     @Transactional
-    public Lecture findLecture(LectureCommand command){
+    public Lecture findLecture(LectureCommand command) {
         // 특강 조회
         return lectureRepository.findById(command.lectureId())
             .orElseThrow(() -> new CustomGlobalException(
                 ErrorCode.LECTURE_NOT_EXIST));
     }
-
-
-
-
 
 
 }

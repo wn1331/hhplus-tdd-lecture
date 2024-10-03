@@ -89,7 +89,7 @@ class LectureDetailServiceTest {
         Lecture lecture1 = mock(Lecture.class); // Lecture 객체를 모킹
         Lecture lecture2 = mock(Lecture.class);
 
-        when(lectureDetailRepository.findByCapacityGreaterThanEqual()).thenReturn(List.of(lectureDetail1, lectureDetail2));
+        when(lectureDetailRepository.findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual()).thenReturn(List.of(lectureDetail1, lectureDetail2));
 
         when(lectureDetail1.getId()).thenReturn(1L);
         when(lectureDetail1.getLecture()).thenReturn(lecture1);
@@ -108,7 +108,7 @@ class LectureDetailServiceTest {
         assertThat(result).hasSize(2);
         assertThat(result.get(0).lectureId()).isEqualTo(998L);
         assertThat(result.get(1).lectureId()).isEqualTo(999L);
-        verify(lectureDetailRepository).findByCapacityGreaterThanEqual();
+        verify(lectureDetailRepository).findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual();
     }
 
 

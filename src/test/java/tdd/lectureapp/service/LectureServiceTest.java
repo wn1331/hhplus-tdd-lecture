@@ -40,7 +40,7 @@ class LectureServiceTest {
 
     @Test
     @Order(1)
-    @DisplayName("findLecture 메서드 - 성공적으로 특강 조회")
+    @DisplayName("[성공] findLecture 메서드 - 성공적으로 특강 조회")
     void findLecture_success() {
         // given
         LectureCommand command = new LectureCommand(LECTURE_ID,LECTURE_DETAIL_ID);
