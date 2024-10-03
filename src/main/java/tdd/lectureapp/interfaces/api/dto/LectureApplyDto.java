@@ -1,8 +1,8 @@
 package tdd.lectureapp.interfaces.api.dto;
 
 import jakarta.validation.constraints.Positive;
+import java.time.LocalDate;
 import lombok.Builder;
-import tdd.lectureapp.application.enrollment.EnrollmentResult;
 import tdd.lectureapp.application.lecture.LectureCriteria;
 import tdd.lectureapp.application.lecture.LectureResult;
 
@@ -21,7 +21,8 @@ public record LectureApplyDto() {
         Long lectureId,
         String lectureTitle,
         String lectureDescription,
-        String lecturer
+        String lecturer,
+        LocalDate lectureDate
     ){
 
         public static Response fromResult(LectureResult result){
@@ -31,6 +32,7 @@ public record LectureApplyDto() {
                 .lectureTitle(result.lectureTitle())
                 .lectureDescription(result.lectureDescription())
                 .lecturer(result.lecturer())
+                .lectureDate(result.lectureDate())
                 .build();
         }
 
