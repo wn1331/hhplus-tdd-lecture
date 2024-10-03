@@ -47,9 +47,11 @@ class LectureDetailServiceTest {
     @DisplayName("[성공] decreaseCapacity 메서드 - 수강 가능 인원이 감소하고 정상 작동")
     void decreaseCapacity_success() {
         // given
-
+        LocalDate futureDate = LocalDate.now().plusDays(1);
         LectureCommand command = new LectureCommand(LECTURE_DETAIL_ID, LECTURE_ID);
         LectureDetail lectureDetail = mock(LectureDetail.class);
+
+        when(lectureDetail.getLectureDate()).thenReturn(futureDate);
 
         when(lectureDetailRepository.findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID))
             .thenReturn(Optional.of(lectureDetail));
@@ -58,8 +60,8 @@ class LectureDetailServiceTest {
         lectureDetailService.decreaseCapacity(command);
 
         // then
-        verify(lectureDetail).decreaseCapacity();  // LectureDetail의 decreaseCapacity()가 호출되었는지 확인
-        verify(lectureDetailRepository).findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID);  // Repository 호출 확인
+        verify(lectureDetail).decreaseCapacity();
+        verify(lectureDetailRepository).findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID);
     }
 
     @Test
