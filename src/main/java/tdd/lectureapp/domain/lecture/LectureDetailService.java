@@ -18,9 +18,15 @@ public class LectureDetailService {
     @Transactional
     public LocalDate decreaseCapacity(LectureCommand command) {
 
+        // 비관락 + 특강 없으면 Exception
         LectureDetail lectureDetail = lectureDetailRepository.findByIdAndLectureId(
                 command.lectureDetailId(), command.lectureId())
             .orElseThrow(() -> new CustomGlobalException(ErrorCode.LECTURE_NOT_EXIST));
+
+        // 특강이 이미 진행됐으면(날짜가 지났으면) Exception
+        if (lectureDetail.getLectureDate().isBefore(LocalDate.now())) {
+            throw new CustomGlobalException(ErrorCode.LECTURE_ALREADY_PASSED);
+        }
 
         // 수강 가능 인원에서 1개 제거, JPA 변경감지(Dirty Check)
         lectureDetail.decreaseCapacity();

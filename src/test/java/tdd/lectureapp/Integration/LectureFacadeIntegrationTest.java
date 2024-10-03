@@ -2,6 +2,7 @@ package tdd.lectureapp.Integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.setMaxLengthForSingleLineDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import tdd.lectureapp.application.lecture.LectureCriteria;
 import tdd.lectureapp.application.lecture.LectureFacade;
 import tdd.lectureapp.application.lecture.LectureResult;
@@ -21,6 +24,8 @@ import tdd.lectureapp.global.CustomGlobalException;
 import tdd.lectureapp.global.ErrorCode;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@Transactional
 @DisplayName("[통합 테스트] Facade 테스트(동시성/비관적 잠금)")
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 class LectureFacadeIntegrationTest {
@@ -125,6 +130,8 @@ class LectureFacadeIntegrationTest {
 
         // 첫 번째 신청은 성공해야 함
         LectureResult result = facade.apply(USER_ID_2, lectureCriteria);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>"+result.lectureDate());
         assertThat(result).isNotNull();
 
         // 두 번째부터는 모두 예외가 발생해야 함

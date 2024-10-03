@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -81,6 +82,29 @@ class LectureDetailServiceTest {
 
     @Test
     @Order(3)
+    @DisplayName("[실패] 이미 진행된 특강에 대해 예외 발생")
+    void decreaseCapacity_lectureAlreadyPassed_exception() {
+        // given
+        LocalDate pastDate = LocalDate.now().minusDays(1);  // 이미 지난 날짜
+
+        LectureCommand command = new LectureCommand(LECTURE_ID, LECTURE_DETAIL_ID);
+        LectureDetail lectureDetail = mock(LectureDetail.class);
+
+        when(lectureDetailRepository.findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID))
+            .thenReturn(Optional.of(lectureDetail));
+        when(lectureDetail.getLectureDate()).thenReturn(pastDate);
+
+        // when, then
+        assertThatThrownBy(() -> lectureDetailService.decreaseCapacity(command))
+            .isInstanceOf(CustomGlobalException.class)
+            .hasMessageContaining(ErrorCode.LECTURE_ALREADY_PASSED.getMessage());
+
+        verify(lectureDetailRepository).findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID);
+
+    }
+
+    @Test
+    @Order(4)
     @DisplayName("[성공] getAvailableLectureDetails 메서드 - 수강 가능한 특강 목록 조회")
     void getAvailableLectureDetails_success() {
         // given
@@ -110,6 +134,8 @@ class LectureDetailServiceTest {
         assertThat(result.get(1).lectureId()).isEqualTo(999L);
         verify(lectureDetailRepository).findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual();
     }
+
+
 
 
 }
