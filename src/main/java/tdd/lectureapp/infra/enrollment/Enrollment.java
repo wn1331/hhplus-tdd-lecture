@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +18,8 @@ import tdd.lectureapp.domain.enrollment.EnrollmentInfo;
 import tdd.lectureapp.infra.lecture.Lecture;
 
 @Entity
+@Table(name = "ENROLLMENT",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "lecture_id"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Enrollment extends BaseTimeEntity {
@@ -39,13 +43,4 @@ public class Enrollment extends BaseTimeEntity {
         this.lecture = lecture;
     }
 
-    public EnrollmentInfo toInfo() {
-        return EnrollmentInfo.builder()
-            .userId(userId)
-            .lectureId(lecture.getId())
-            .lectureTitle(lecture.getTitle())
-            .lectureDescription(lecture.getDescription())
-            .lecturer(lecture.getLecturer())
-            .build();
-    }
 }

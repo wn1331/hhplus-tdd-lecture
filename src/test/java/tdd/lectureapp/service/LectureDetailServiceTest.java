@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -46,9 +47,11 @@ class LectureDetailServiceTest {
     @DisplayName("[성공] decreaseCapacity 메서드 - 수강 가능 인원이 감소하고 정상 작동")
     void decreaseCapacity_success() {
         // given
-
+        LocalDate futureDate = LocalDate.now().plusDays(1);
         LectureCommand command = new LectureCommand(LECTURE_DETAIL_ID, LECTURE_ID);
         LectureDetail lectureDetail = mock(LectureDetail.class);
+
+        when(lectureDetail.getLectureDate()).thenReturn(futureDate);
 
         when(lectureDetailRepository.findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID))
             .thenReturn(Optional.of(lectureDetail));
@@ -57,8 +60,8 @@ class LectureDetailServiceTest {
         lectureDetailService.decreaseCapacity(command);
 
         // then
-        verify(lectureDetail).decreaseCapacity();  // LectureDetail의 decreaseCapacity()가 호출되었는지 확인
-        verify(lectureDetailRepository).findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID);  // Repository 호출 확인
+        verify(lectureDetail).decreaseCapacity();
+        verify(lectureDetailRepository).findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID);
     }
 
     @Test
@@ -81,6 +84,29 @@ class LectureDetailServiceTest {
 
     @Test
     @Order(3)
+    @DisplayName("[실패] 이미 진행된 특강에 대해 예외 발생")
+    void decreaseCapacity_lectureAlreadyPassed_exception() {
+        // given
+        LocalDate pastDate = LocalDate.now().minusDays(1);  // 이미 지난 날짜
+
+        LectureCommand command = new LectureCommand(LECTURE_ID, LECTURE_DETAIL_ID);
+        LectureDetail lectureDetail = mock(LectureDetail.class);
+
+        when(lectureDetailRepository.findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID))
+            .thenReturn(Optional.of(lectureDetail));
+        when(lectureDetail.getLectureDate()).thenReturn(pastDate);
+
+        // when, then
+        assertThatThrownBy(() -> lectureDetailService.decreaseCapacity(command))
+            .isInstanceOf(CustomGlobalException.class)
+            .hasMessageContaining(ErrorCode.LECTURE_ALREADY_PASSED.getMessage());
+
+        verify(lectureDetailRepository).findByIdAndLectureId(LECTURE_DETAIL_ID, LECTURE_ID);
+
+    }
+
+    @Test
+    @Order(4)
     @DisplayName("[성공] getAvailableLectureDetails 메서드 - 수강 가능한 특강 목록 조회")
     void getAvailableLectureDetails_success() {
         // given
@@ -89,7 +115,7 @@ class LectureDetailServiceTest {
         Lecture lecture1 = mock(Lecture.class); // Lecture 객체를 모킹
         Lecture lecture2 = mock(Lecture.class);
 
-        when(lectureDetailRepository.findByCapacityGreaterThanEqual()).thenReturn(List.of(lectureDetail1, lectureDetail2));
+        when(lectureDetailRepository.findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual()).thenReturn(List.of(lectureDetail1, lectureDetail2));
 
         when(lectureDetail1.getId()).thenReturn(1L);
         when(lectureDetail1.getLecture()).thenReturn(lecture1);
@@ -108,8 +134,10 @@ class LectureDetailServiceTest {
         assertThat(result).hasSize(2);
         assertThat(result.get(0).lectureId()).isEqualTo(998L);
         assertThat(result.get(1).lectureId()).isEqualTo(999L);
-        verify(lectureDetailRepository).findByCapacityGreaterThanEqual();
+        verify(lectureDetailRepository).findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual();
     }
+
+
 
 
 }

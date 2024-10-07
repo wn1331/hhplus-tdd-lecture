@@ -1,5 +1,6 @@
 package tdd.lectureapp.infra.lecture;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,8 @@ public class LectureDetailRepositoryImpl implements LectureDetailRepository {
     }
 
     @Override
-    public List<LectureDetail> findByCapacityGreaterThanEqual() {
-        return repository.findByCapacityGreaterThanEqual(1L);
+    public List<LectureDetail> findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual(){
+        return repository.findByCapacityGreaterThanEqualAndLectureDateGreaterThanEqual(1L,
+            LocalDate.now());
     }
 }

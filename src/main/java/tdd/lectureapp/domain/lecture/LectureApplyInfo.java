@@ -1,21 +1,19 @@
-package tdd.lectureapp.domain.enrollment;
+package tdd.lectureapp.domain.lecture;
 
 import lombok.Builder;
-import tdd.lectureapp.application.enrollment.EnrollmentResult;
 import tdd.lectureapp.infra.enrollment.Enrollment;
 
 @Builder
-public record EnrollmentInfo(
+public record LectureApplyInfo(
     Long userId,
     Long lectureId,
     String lectureTitle,
     String lectureDescription,
     String lecturer
-
 ) {
 
-    public static EnrollmentInfo fromEntity(Enrollment enrollment){
-        return EnrollmentInfo.builder()
+    public static LectureApplyInfo fromEntity(Enrollment enrollment) {
+        return LectureApplyInfo.builder()
             .userId(enrollment.getUserId())
             .lectureId(enrollment.getLecture().getId())
             .lectureTitle(enrollment.getLecture().getTitle())
@@ -23,6 +21,4 @@ public record EnrollmentInfo(
             .lecturer(enrollment.getLecture().getLecturer())
             .build();
     }
-
-
 }

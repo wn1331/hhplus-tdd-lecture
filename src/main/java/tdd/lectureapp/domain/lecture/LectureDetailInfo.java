@@ -2,7 +2,7 @@ package tdd.lectureapp.domain.lecture;
 
 import java.time.LocalDate;
 import lombok.Builder;
-import tdd.lectureapp.application.lecture.LectureDetailResult;
+import tdd.lectureapp.infra.lecture.LectureDetail;
 
 @Builder
 public record LectureDetailInfo(
@@ -14,13 +14,14 @@ public record LectureDetailInfo(
 
 
 ) {
-    public LectureDetailResult toResult(){
-        return LectureDetailResult.builder()
-                .id(id)
-                .lectureId(lectureId)
-                .lecturer(lecturer)
-                .lectureDate(lectureDate)
-                .capacity(capacity)
+
+    public static LectureDetailInfo fromEntity(LectureDetail lectureDetail){
+        return LectureDetailInfo.builder()
+                .id(lectureDetail.getId())
+                .lectureId(lectureDetail.getLecture().getId())
+                .lecturer(lectureDetail.getLecture().getLecturer())
+                .lectureDate(lectureDetail.getLectureDate())
+                .capacity(lectureDetail.getCapacity())
                 .build();
     }
 }
